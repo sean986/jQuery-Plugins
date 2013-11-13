@@ -242,27 +242,34 @@ $.fn.removeNumeric = function()
 	return this.data("numeric.decimal", null).data("numeric.negative", null).data("numeric.callback", null).unbind("keypress", $.fn.numeric.keypress).unbind("blur", $.fn.numeric.blur);
 };
 
-// Based on code from http://javascript.nwbox.com/cursor_position/ (Diego Perini <dperini@nwbox.com>)
-$.fn.getSelectionStart = function(o)
-{
-	if (o.createTextRange)
-	{
-		var r = document.selection.createRange().duplicate();
-		r.moveEnd('character', o.value.length);
-		if (r.text === '') { return o.value.length; }
-		return o.value.lastIndexOf(r.text);
-	} else { return o.selectionStart; }
-};
+    $.fn.getSelectionStart = function (o) {
 
-// Based on code from http://javascript.nwbox.com/cursor_position/ (Diego Perini <dperini@nwbox.com>)
-$.fn.getSelectionEnd = function(o)
-{
-	if (o.createTextRange) {
-		var r = document.selection.createRange().duplicate()
-		r.moveStart('character', -o.value.length)
-		return r.text.length
-	} else return o.selectionEnd
-}
+        if (o.selectionStart) {
+            return o.selectionStart;
+        }
+        if (o.createTextRange) {
+            var r = document.selection.createRange().duplicate();
+            r.moveEnd('character', o.value.length);
+            if (r.text === '') {
+                return o.value.length;
+            }
+            return o.value.lastIndexOf(r.text);
+        }
+        return 0;
+    };
+
+    $.fn.getSelectionEnd = function (o) {
+
+        if (o.selectionEnd) {
+            return o.selectionEnd;
+        }
+        if (o.createTextRange) {
+            var r = document.selection.createRange().duplicate();
+            r.moveStart('character', -o.value.length);
+            return r.text.length;
+        }
+        return 0;
+    };
 
 // set the selection, o is the object (input), p is the position ([start, end] or just start)
 $.fn.setSelection = function(o, p)
